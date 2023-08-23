@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>CustomerTest.Presentation.Api</RootNamespace>
+    <PackageId>CustomerTest.Presentation.Api</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.2" />
+	  
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CustomerTest.Application\CustomerTest.Application.csproj" />
+    <ProjectReference Include="..\..\CustomerTest.Infrastructure\CustomerTest.Infrastructure.csproj" />
+    <ProjectReference Include="..\CustomerTest.Presentation.Contracts\CustomerTest.Presentation.Contracts.csproj" />
+  </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,229 @@
+﻿@page "/"
+@using CustomerTest.Presentation.Contracts.Customer
+@using System.Net
+@inject HttpClient Http
+
+<PageTitle>Index</PageTitle>
+
+@if (Message != "")
+{
+    <h3 id="Message">@Message</h3>
+}
+
+<h5>FirstName</h5>
+<input id="FirstName" placeholder="FirstName" @bind="Customer.FirstName"/>
+<br/>
+<h5>LastName</h5>
+<input id="LastName" placeholder="LastName" @bind="Customer.LastName"/>
+<br/>
+<h5>PhoneNumber</h5>
+<input id="PhoneNumber" placeholder="PhoneNumber" @bind="Customer.PhoneNumber"/>
+<br/>
+<h5>Email</h5>
+<input id="Email" placeholder="Email" @bind="Customer.Email"/>
+<br/>
+<h5>DateOfBirth</h5>
+<InputDate id="DateOfBirth" @bind-Value="Customer.DateOfBirth"
+           Format="dd MMMM yyyy"
+           Min="@Min" Max="@Max">
+</InputDate>
+<br/>
+<h5>Address</h5>
+<input id="Address" placeholder="Address" @bind="Customer.Address"/>
+<br/>
+<br/>
+<button id="CreateBtn" @onclick="@CreateCustomerAsync">Create Customer</button>
+@if (IsEditing)
+{
+    <button id="EditBtn" @onclick="@EditCustomerAsync">Edit Customer</button>
+}
+
+<br/>
+@if (AllCustomers.Count > 0)
+{
+    <table class="table" id="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>PhoneNumber</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in AllCustomers)
+        {
+            <tr @onclick="() => GetCustomerAsync(customer.Id)" id="tablerows" name="@customer.FirstName">
+
+                <td>@customer.Id</td>
+                <td>@customer.FirstName</td>
+                <td>@customer.LastName</td>
+                <td>@customer.PhoneNumber</td>
+                <td>@customer.Email</td>
+                <td>
+                    <button id="@customer.Email+delete" @onclick="(() => DeleteCustomerAsync(customer.Id))">Delete</button>
+                </td>
+
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+
+@code
+{
+    CreateCustomerRequest? Customer { get; set; }
+    List<GetCustomerListResponse>? AllCustomers { get; set; }
+    string Message { get; set; }
+
+
+    bool IsEditing { get; set; }
+    string EdtitingCustomerId { get; set; }
+
+    public DateTime Min = new DateTime(1990, 1, 1, 8, 15, 0);
+    public DateTime Max = new DateTime(2025, 1, 1, 19, 30, 45);
+
+
+    protected override async void OnInitialized()
+    {
+        await base.OnInitializedAsync();
+
+        Customer = new CreateCustomerRequest();
+        AllCustomers = new List<GetCustomerListResponse>();
+        Message = "";
+        Http = new HttpClient() { BaseAddress = new Uri("http://localhost:5090/api/v1/") };
+
+        Customer.DateOfBirth = DateTime.Now;
+
+        await GetCustomersListAsync();
+    }
+
+    public async Task GetCustomersListAsync()
+    {
+        AllCustomers = await Http.GetFromJsonAsync<List<GetCustomerListResponse>>("Customer/List");
+        StateHasChanged();
+    }
+
+    public async Task GetCustomerAsync(string id)
+    {
+        var response = await Http.GetFromJsonAsync<GetCustomerResponse>($"Customer/{id}");
+
+        IsEditing = true;
+        EdtitingCustomerId = id;
+
+        Customer.FirstName = response.FirstName;
+        Customer.LastName = response.LastName;
+        Customer.PhoneNumber = response.PhoneNumber;
+        Customer.Email = response.Email;
+        Customer.DateOfBirth = response.DateOfBirth;
+        Customer.Address = response.Address;
+
+        StateHasChanged();
+    }
+
+    public async Task DeleteCustomerAsync(string id)
+    {
+        Message = "";
+        try
+        {
+            var response = await Http.DeleteAsync($"Customer/{id}");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Message = "Customer Deleted Successfully!";
+                await GetCustomersListAsync();
+            }
+            else
+            {
+                var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
+                Message = "";
+                foreach (var error in res.errors)
+                {
+                    Message += error.Value + "  ";
+                }
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+
+    public async Task CreateCustomerAsync()
+    {
+        Message = "";
+        try
+        {
+            var response = await Http.PostAsJsonAsync("Customer", Customer);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var res = await response.Content.ReadFromJsonAsync<CreateCustomerResponse>();
+                Message = "Customer Created Successfully!";
+                await GetCustomersListAsync();
+            }
+            else
+            {
+                var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
+                Message = "";
+                foreach (var error in res.errors)
+                {
+                    Message += error.Value + "  ";
+                }
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Message = e.ToString();
+            throw;
+        }
+    }
+
+    public async Task EditCustomerAsync()
+    {
+        Message = "";
+        try
+        {
+            var data = new EditCustomerRequest()
+            {
+                FirstName = Customer.FirstName,
+                LastName = Customer.LastName,
+                PhoneNumber = Customer.PhoneNumber,
+                Email = Customer.Email,
+                DateOfBirth = Customer.DateOfBirth,
+                Address = Customer.Address
+            };
+
+            var response = await Http.PutAsJsonAsync($"Customer/{EdtitingCustomerId}", data);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var res = await response.Content.ReadFromJsonAsync<EditCustomerResponse>();
+                Message = "Customer Edited Successfully!";
+                IsEditing = false;
+                await GetCustomersListAsync();
+            }
+            else
+            {
+                var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
+                Message = "";
+                foreach (var error in res.errors)
+                {
+                    Message += error.Value + "  ";
+                }
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Message = e.ToString();
+            throw;
+        }
+    }
+
+
+}
