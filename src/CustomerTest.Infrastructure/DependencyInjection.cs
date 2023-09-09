@@ -11,7 +11,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        //TODO:Move Connection String To ENV or Secret
+        //TODO : Move Connection String To ENV or Secret
         services.AddDbContext<CustomerTestDbContext>(options =>
             options.UseSqlServer("Data Source=navid;Initial Catalog=CustomerTest;Integrated Security=True;Encrypt=false"));
 
