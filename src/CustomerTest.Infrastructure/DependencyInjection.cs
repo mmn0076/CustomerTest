@@ -11,9 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        //TODO:Move Connection String To ENV or Secret
+        var dbHost = Environment.GetEnvironmentVariable("CustomerTest_dbHost");
+        var dbName = Environment.GetEnvironmentVariable("CustomerTest_dbName");
+        var dbPassword = Environment.GetEnvironmentVariable("CustomerTest_dbPassword");
         services.AddDbContext<CustomerTestDbContext>(options =>
-            options.UseSqlServer("Data Source=navid;Initial Catalog=CustomerTest;Integrated Security=True;Encrypt=false"));
+                options.UseSqlServer($"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};Encrypt=false"));
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();

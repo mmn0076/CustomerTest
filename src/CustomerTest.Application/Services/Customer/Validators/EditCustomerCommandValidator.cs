@@ -9,11 +9,6 @@ namespace CustomerTest.Application.Services.Customer.Validators
         public EditCustomerCommandValidator()
         {
 
-            RuleFor(x => x.Id)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Id is Not Valid.");
-
             RuleFor(x => x.FirstName)
                 .NotNull()
                 .NotEmpty()
@@ -33,7 +28,7 @@ namespace CustomerTest.Application.Services.Customer.Validators
             RuleFor(x => x.PhoneNumber)
                 .NotNull()
                 .NotEmpty()
-                .Must(x => PhoneNumberUtil.IsViablePhoneNumber(x.ToString()));
+                .Must(PhoneNumberUtil.IsViablePhoneNumber);
 
             RuleFor(x => x.Address)
                 .NotNull()

@@ -1,4 +1,6 @@
-﻿namespace CustomerTest.Presentation.Client
+﻿using System.Collections.Generic;
+
+namespace CustomerTest.Presentation.Client
 {
     public class ErrorModel
     {

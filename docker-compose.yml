@@ -1,0 +1,70 @@
+version: '3.4'
+
+networks: 
+  BackEndNetwork:
+  FrontNetwork:
+
+services:
+  customerTest_server:
+    container_name: server
+    image: ${DOCKER_REGISTRY-}server
+    build:
+      context: .
+      dockerfile: src\CustomerTest.Presentation\CustomerTest.Presentation.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5090
+      - CustomerTest_dbHost=mssql
+      - CustomerTest_dbName=CustomerTest
+      - CustomerTest_dbPassword=1qaz!QAZ
+      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
+    ports:
+      - 5090:5090
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - mssql
+    networks:
+      - BackEndNetwork
+      - FrontNetwork
+  customerTest_client:
+    container_name: client
+    image: ${DOCKER_REGISTRY-}client
+    build:
+      context: .
+      dockerfile: src\CustomerTest.Presentation\CustomerTest.Presentation.Client/Dockerfile
+    ports:
+      - 5091:5091 
+    depends_on:
+      - customerTest_server
+    networks:
+      - FrontNetwork
+  tests: # docker compose up tests
+    container_name: tests
+    build:
+      context: .
+      dockerfile: src\CustomerTest.Presentation\CustomerTest.Presentation.Api/Dockerfile
+      target: build
+    command: bash -c "cd /app/build/ && dotnet test CustomerTest.EndToEndTests.dll"
+    environment:
+      - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  mssql:
+    container_name: sql_server
+    image: mcr.microsoft.com/mssql/server:2019-CU18-ubuntu-20.04
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "1qaz!QAZ"
+    ports:
+      - 5092:1433
+    volumes:
+      - my-volume:/var/opt/mssql
+    networks:
+      - BackEndNetwork
+
+volumes:
+  my-volume:

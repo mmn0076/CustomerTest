@@ -1,6 +1,8 @@
 ﻿using CustomerTest.Domain;
 using CustomerTest.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CustomerTest.Infrastructure.Persistence.DbContext
 {
@@ -12,6 +14,18 @@ namespace CustomerTest.Infrastructure.Persistence.DbContext
             base(options)
         {
             _domainEventInterceptor = domainEventInterceptor;
+            try
+            {
+                if (Database.GetService<IDatabaseCreator>() is RelationalDatabaseCreator dbc)
+                {
+                    if (!dbc.CanConnect()) dbc.Create();
+                    if (!dbc.HasTables()) dbc.CreateTables();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public virtual DbSet<Customer> Customers { get; set; }

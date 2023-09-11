@@ -9,3 +9,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient());
 
 await builder.Build().RunAsync();
+
+
+public partial class ClientProgram { }

@@ -63,7 +63,7 @@ namespace CustomerTest.Presentation.Api.Controllers
         }
         
         /// <summary>
-        /// Edit a Order by id
+        /// Edit an Order by id
         /// </summary>
         /// <param name="id">Order id</param>
         /// <param name="order">Order Edit Model</param>
@@ -88,7 +88,7 @@ namespace CustomerTest.Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Delete a Order by id
+        /// Delete an Order by id
         /// </summary>
         /// <param name="id">Order id</param>
         /// <returns>200</returns>
