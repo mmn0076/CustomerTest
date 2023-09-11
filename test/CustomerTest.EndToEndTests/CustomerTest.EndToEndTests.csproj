@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\CustomerTest.Presentation\CustomerTest.Presentation.Api\CustomerTest.Presentation.Api.csproj" />
+      <ProjectReference Include="..\..\src\CustomerTest.Presentation\CustomerTest.Presentation.Api\CustomerTest.Presentation.Api.csproj" />
     </ItemGroup>
 
 </Project>
