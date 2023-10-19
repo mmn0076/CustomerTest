@@ -26,7 +26,7 @@ namespace CustomerTest.Application.Services.Customer.Commands
             CancellationToken cancellationToken)
         {
 
-            var isDuplicate = await _customerRepository.IsDuplicateEmailAsync(request.Id, request.Email, cancellationToken);
+            var isDuplicate = await _customerRepository.IsDuplicateEmailAsync(request.Id, request.Email!, cancellationToken);
             if (isDuplicate)
             {
                 return Errors.Customer.DuplicateUser;
@@ -44,9 +44,9 @@ namespace CustomerTest.Application.Services.Customer.Commands
                     return _mapper.Map<EditCustomerResult>(customer.Value);
                 }
             }
-            catch (Exception e)
+            catch
             {
-                return Errors.Customer.NotFound;
+                return Errors.Common.InternalServerError;
             }
            
         }

@@ -2,6 +2,7 @@ using MapsterMapper;
 using CustomerTest.Application.Services.Customer.Commands;
 using CustomerTest.Application.Services.Customer.Queries;
 using CustomerTest.Application.Services.Order.Queries;
+using CustomerTest.Presentation.Api.Controllers.Abstraction;
 using CustomerTest.Presentation.Contracts.Customer;
 using CustomerTest.Presentation.Contracts.Order;
 using MediatR;

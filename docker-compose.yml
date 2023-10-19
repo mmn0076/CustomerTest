@@ -42,12 +42,12 @@ services:
     networks:
       - FrontNetwork
   tests: # docker compose up tests
-    container_name: tests
+    container_name: integration_tests
     build:
       context: .
       dockerfile: src\CustomerTest.Presentation\CustomerTest.Presentation.Api/Dockerfile
       target: build
-    command: bash -c "cd /app/build/ && dotnet test CustomerTest.EndToEndTests.dll"
+    command: bash -c "cd /app/build/ && dotnet test CustomerTest.IntegrationTests.dll"
     environment:
       - TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal 
     volumes:

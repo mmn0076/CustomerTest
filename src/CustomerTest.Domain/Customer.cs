@@ -5,19 +5,20 @@ namespace CustomerTest.Domain
 {
     public class Customer : AggregateRoot
     {
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [Required] 
-        public string Address { get; set; }
+        public string Address { get; set; } = null!;
+
         public DateTime DateOfBirth { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Required] 
-        public string Email { get; set; }
-        
-        public List<Order> Orders { get; set; }
+        public string Email { get; set; } = null!;
+
+        public List<Order>? Orders { get; set; }
     }
 }

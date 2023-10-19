@@ -31,14 +31,13 @@ namespace CustomerTest.Infrastructure.Persistence.Repositories
 
         public async Task<Order?> GetOrderAsync(Guid id, CancellationToken ct)
         {
-            return await _dbContext.Set<Order>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
+            return await _dbContext.Set<Order>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
         }
 
         public async Task<List<Order>> GetCustomerOrdersAsync(Guid customerId, CancellationToken ct, int offset = 0,
             int limit = 10)
         {
             var customers = await _dbContext.Set<Order>()
-                .AsQueryable()
                 .Where(x => x.CustomerId == customerId)
                 .Skip(offset)
                 .Take(limit)
@@ -49,7 +48,7 @@ namespace CustomerTest.Infrastructure.Persistence.Repositories
 
         public async Task<ErrorOr<GetOrderResult>> EditOrderAsync(EditOrderCommand command, CancellationToken ct)
         {
-            var order = await _dbContext.Set<Order>().AsQueryable().FirstOrDefaultAsync(x => x.Id == command.Id, ct);
+            var order = await _dbContext.Set<Order>().FirstOrDefaultAsync(x => x.Id == command.Id, ct);
 
             if (order == null)
             {
@@ -68,7 +67,7 @@ namespace CustomerTest.Infrastructure.Persistence.Repositories
 
         public async Task DeleteOrderAsync(Guid id, CancellationToken ct)
         {
-            await _dbContext.Set<Order>().AsQueryable().Where(x => x.Id == id).ExecuteDeleteAsync(ct);
+            await _dbContext.Set<Order>().Where(x => x.Id == id).ExecuteDeleteAsync(ct);
         }
     }
 }

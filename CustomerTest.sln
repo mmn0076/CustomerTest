@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerTest.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerTest.Presentation.Contracts", "src\CustomerTest.Presentation\CustomerTest.Presentation.Contracts\CustomerTest.Presentation.Contracts.csproj", "{94E20699-BC00-44C5-A190-BDFC446F0DF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerTest.EndToEndTests", "test\CustomerTest.EndToEndTests\CustomerTest.EndToEndTests.csproj", "{052B6FED-8447-42FC-A31E-6FA9B4E30599}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerTest.IntegrationTests", "test\CustomerTest.IntegrationTests\CustomerTest.IntegrationTests.csproj", "{052B6FED-8447-42FC-A31E-6FA9B4E30599}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

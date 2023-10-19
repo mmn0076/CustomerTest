@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.MsSql;
 
-namespace CustomerTest.EndToEndTests;
+namespace CustomerTest.IntegrationTests.Abstraction;
 
 public class WebAppFactory : WebApplicationFactory<ApiProgram> , IAsyncLifetime
 {

@@ -2,7 +2,7 @@
 
 public class GetOrderResponse
 {
-    public string Id { get; set; }
+    public string? Id { get; set; }
     
     public double Price { get; set; }
     

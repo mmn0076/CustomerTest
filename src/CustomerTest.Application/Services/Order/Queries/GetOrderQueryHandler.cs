@@ -27,7 +27,7 @@ namespace CustomerTest.Application.Services.Order.Queries
 
             if (order == null)
             {
-                return Errors.Customer.NotFound;
+                return Errors.Order.NotFound;
             }
 
             return _mapper.Map<GetOrderResult>(order);
