@@ -3,6 +3,7 @@ using CustomerTest.Application.Services.Customer.Commands;
 using CustomerTest.Application.Services.Customer.Queries;
 using CustomerTest.Application.Services.Order.Commands;
 using CustomerTest.Application.Services.Order.Queries;
+using CustomerTest.Presentation.Api.Controllers.Abstraction;
 using CustomerTest.Presentation.Contracts.Customer;
 using CustomerTest.Presentation.Contracts.Order;
 using MediatR;
@@ -104,10 +105,6 @@ namespace CustomerTest.Presentation.Api.Controllers
 
             return Ok();
         }
-        
-        public int Offset { get; set; } = 0;
-        
-        public int Limit { get; set; } = 10;
 
         #endregion
 

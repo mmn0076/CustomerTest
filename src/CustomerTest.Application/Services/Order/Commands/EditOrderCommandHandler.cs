@@ -34,9 +34,9 @@ public class EditOrderCommandHandler : IRequestHandler<EditOrderCommand, ErrorOr
                 return _mapper.Map<EditOrderResult>(order.Value);
             }
         }
-        catch (Exception e)
+        catch
         {
-            return Errors.Order.NotFound;
+            return Errors.Common.InternalServerError;
         }
     }
 }

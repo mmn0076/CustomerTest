@@ -11,7 +11,7 @@
 }
 
 <h5>FirstName</h5>
-<input id="FirstName" placeholder="FirstName" @bind="Customer.FirstName"/>
+<input id="FirstName" placeholder="FirstName" @bind="Customer!.FirstName"/>
 <br/>
 <h5>LastName</h5>
 <input id="LastName" placeholder="LastName" @bind="Customer.LastName"/>
@@ -25,7 +25,7 @@
 <h5>DateOfBirth</h5>
 <InputDate id="DateOfBirth" @bind-Value="Customer.DateOfBirth"
            Format="dd MMMM yyyy"
-           Min="@Min" Max="@Max">
+           Min="@_min" Max="@_max">
 </InputDate>
 <br/>
 <h5>Address</h5>
@@ -39,7 +39,7 @@
 }
 
 <br/>
-@if (AllCustomers.Count > 0)
+@if (AllCustomers?.Count > 0)
 {
     <table class="table" id="table">
         <thead>
@@ -55,7 +55,7 @@
         <tbody>
         @foreach (var customer in AllCustomers)
         {
-            <tr @onclick="() => GetCustomerAsync(customer.Id)" id="tablerows" name="@customer.FirstName">
+            <tr @onclick="() => GetCustomerAsync(customer.Id!)" id="tablerows" name="@customer.FirstName">
 
                 <td>@customer.Id</td>
                 <td>@customer.FirstName</td>
@@ -63,7 +63,7 @@
                 <td>@customer.PhoneNumber</td>
                 <td>@customer.Email</td>
                 <td>
-                    <button id="@customer.Email+delete" @onclick="(() => DeleteCustomerAsync(customer.Id))">Delete</button>
+                    <button id="@customer.Email+delete" @onclick="(() => DeleteCustomerAsync(customer.Id!))">Delete</button>
                 </td>
 
             </tr>
@@ -77,14 +77,14 @@
 {
     CreateCustomerRequest? Customer { get; set; }
     List<GetCustomerListResponse>? AllCustomers { get; set; }
-    string Message { get; set; }
+    string? Message { get; set; }
 
 
     bool IsEditing { get; set; }
-    string EdtitingCustomerId { get; set; }
+    string? EditingCustomerId { get; set; }
 
-    public DateTime Min = new DateTime(1990, 1, 1, 8, 15, 0);
-    public DateTime Max = new DateTime(2025, 1, 1, 19, 30, 45);
+    private readonly DateTime _min = new DateTime(1990, 1, 1, 8, 15, 0);
+    private readonly DateTime _max = new DateTime(2025, 1, 1, 19, 30, 45);
 
 
     protected override async void OnInitialized()
@@ -101,30 +101,30 @@
         await GetCustomersListAsync();
     }
 
-    public async Task GetCustomersListAsync()
+    private async Task GetCustomersListAsync()
     {
         AllCustomers = await Http.GetFromJsonAsync<List<GetCustomerListResponse>>("Customer/List");
         StateHasChanged();
     }
 
-    public async Task GetCustomerAsync(string id)
+    private async Task GetCustomerAsync(string id)
     {
         var response = await Http.GetFromJsonAsync<GetCustomerResponse>($"Customer/{id}");
 
         IsEditing = true;
-        EdtitingCustomerId = id;
+        EditingCustomerId = id;
 
-        Customer.FirstName = response.FirstName;
-        Customer.LastName = response.LastName;
-        Customer.PhoneNumber = response.PhoneNumber;
-        Customer.Email = response.Email;
-        Customer.DateOfBirth = response.DateOfBirth;
-        Customer.Address = response.Address;
+        Customer!.FirstName = response?.FirstName;
+        Customer.LastName = response?.LastName;
+        Customer.PhoneNumber = response?.PhoneNumber;
+        Customer.Email = response?.Email;
+        Customer.DateOfBirth = response!.DateOfBirth;
+        Customer.Address = response?.Address;
 
         StateHasChanged();
     }
 
-    public async Task DeleteCustomerAsync(string id)
+    private async Task DeleteCustomerAsync(string id)
     {
         Message = "";
         try
@@ -139,20 +139,21 @@
             {
                 var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
                 Message = "";
-                foreach (var error in res.errors)
+                foreach (var error in res!.Errors!)
                 {
                     Message += error.Value + "  ";
                 }
                 StateHasChanged();
             }
         }
-        catch (Exception e)
+        catch
         {
+            // ignored
         }
     }
 
 
-    public async Task CreateCustomerAsync()
+    private async Task CreateCustomerAsync()
     {
         Message = "";
         try
@@ -168,7 +169,7 @@
             {
                 var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
                 Message = "";
-                foreach (var error in res.errors)
+                foreach (var error in res!.Errors!)
                 {
                     Message += error.Value + "  ";
                 }
@@ -183,14 +184,14 @@
         }
     }
 
-    public async Task EditCustomerAsync()
+    private async Task EditCustomerAsync()
     {
         Message = "";
         try
         {
             var data = new EditCustomerRequest()
             {
-                FirstName = Customer.FirstName,
+                FirstName = Customer!.FirstName,
                 LastName = Customer.LastName,
                 PhoneNumber = Customer.PhoneNumber,
                 Email = Customer.Email,
@@ -198,7 +199,7 @@
                 Address = Customer.Address
             };
 
-            var response = await Http.PutAsJsonAsync($"Customer/{EdtitingCustomerId}", data);
+            var response = await Http.PutAsJsonAsync($"Customer/{EditingCustomerId}", data);
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var res = await response.Content.ReadFromJsonAsync<EditCustomerResponse>();
@@ -210,7 +211,7 @@
             {
                 var res = await response.Content.ReadFromJsonAsync<ErrorModel>();
                 Message = "";
-                foreach (var error in res.errors)
+                foreach (var error in res!.Errors!)
                 {
                     Message += error.Value + "  ";
                 }

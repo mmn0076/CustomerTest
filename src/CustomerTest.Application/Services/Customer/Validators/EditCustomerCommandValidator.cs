@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using CustomerTest.Application.Services.Customer.Commands;
+using CustomerTest.Domain.Common.Errors;
 using PhoneNumbers;
 
 namespace CustomerTest.Application.Services.Customer.Validators
@@ -10,20 +11,18 @@ namespace CustomerTest.Application.Services.Customer.Validators
         {
 
             RuleFor(x => x.FirstName)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("FirstName is required.");
+                .NotNull().WithMessage(Errors.Validation.FirstNameRequired.Description)
+                .NotEmpty().WithMessage(Errors.Validation.FirstNameRequired.Description);
 
             RuleFor(x => x.LastName)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("LastName is required.");
+                .NotNull().WithMessage(Errors.Validation.LastNameRequired.Description)
+                .NotEmpty().WithMessage(Errors.Validation.LastNameRequired.Description);
 
             RuleFor(x => x.Email)
                 .NotNull()
                 .NotEmpty()
                 .EmailAddress()
-                .WithMessage("Email is not Valid.");
+                .WithMessage(Errors.Validation.EmailIsNotValid.Description);
 
             RuleFor(x => x.PhoneNumber)
                 .NotNull()

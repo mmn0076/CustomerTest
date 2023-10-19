@@ -7,5 +7,5 @@ public class CreateOrderCommand : IRequest<ErrorOr<CreateOrderResult>>
 {
     public double Price { get; set; }
     
-    public string CustomerId { get; set; }
+    public string? CustomerId { get; set; }
 }

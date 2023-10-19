@@ -28,9 +28,9 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Err
         {
             await _orderRepository.CreateOrderAsync(order, cancellationToken);
         }
-        catch (Exception e)
+        catch
         {
-            return Errors.Customer.NotFound;
+            return Errors.Common.DatabaseError;
         }
 
         return _mapper.Map<CreateOrderResult>(order);

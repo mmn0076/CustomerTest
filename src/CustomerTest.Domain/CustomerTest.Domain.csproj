@@ -11,7 +11,6 @@
       <PackageReference Include="ErrorOr" Version="1.2.1" />
 	  <PackageReference Include="MediatR" Version="12.1.1" />
 	  <PackageReference Include="Mapster" Version="7.4.0-pre06" />
-   	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     </ItemGroup>
 

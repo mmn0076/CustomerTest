@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using CustomerTest.Application.Services.Order.Commands;
+using CustomerTest.Domain.Common.Errors;
 
 namespace CustomerTest.Application.Services.Order.Validators
 {
@@ -10,7 +11,7 @@ namespace CustomerTest.Application.Services.Order.Validators
             RuleFor(x => x.Price)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage("Price is required.");
+                .WithMessage(Errors.Validation.PriceRequired.Description);
         }
     }
 }
